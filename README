@@ -1,0 +1,12 @@
+Research and fun building an AWS system using hashicorp tools.
+
+Requirements
+* install terraform bin and put it in your path
+* AWS access keys with admin level privs
+* expose AWS envvars to terraform
+export TF_VAR_access_key=$AWS_ACCESS_KEY_ID
+export TF_VAR_secret_key=$AWS_SECRET_ACCESS_KEY
+export TF_VAR_region=$AWS_DEFAULT_REGION
+
+Build the system
+* terraform apply
