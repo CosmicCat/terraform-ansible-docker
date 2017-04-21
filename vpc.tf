@@ -71,7 +71,7 @@ resource "aws_eip" "ip" {
 resource "aws_instance" "example" {
   ami           = "ami-efd0428f"
   instance_type = "t2.micro"
-	key_name      = "matthew"
+	key_name      = "${var.keypair}"
 	subnet_id     = "${aws_subnet.public.id}"
 	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
 }
