@@ -6,6 +6,8 @@ provider "aws" {
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
+	enable_dns_hostnames = "true"
+
 	tags {
     Name = "Matthew"
   }
@@ -58,6 +60,7 @@ resource "aws_security_group" "allow_all" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # terraform strips the egress allow all default rule because security - add it back
 	egress {
     from_port       = 0
     to_port         = 0
@@ -71,11 +74,11 @@ resource "aws_security_group" "allow_all" {
 }
 
 resource "aws_eip" "ip" {
-  instance = "${aws_instance.example.id}"
+  instance = "${aws_instance.public_with_eip.id}"
 	vpc      = "true"
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "public_with_eip" {
   ami           = "ami-efd0428f"
   instance_type = "t2.micro"
 	key_name      = "${var.keypair}"
