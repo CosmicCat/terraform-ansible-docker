@@ -14,6 +14,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public" {
   vpc_id     = "${aws_vpc.main.id}"
   cidr_block = "10.0.1.0/24"
+	map_public_ip_on_launch = true
 
   tags {
     Name = "public"
@@ -37,7 +38,7 @@ resource "aws_route_table" "direct_to_internet" {
   }
 
   tags {
-    Name = "main"
+    Name = "direct_internet"
   }
 }
 
@@ -70,6 +71,7 @@ resource "aws_eip" "ip" {
 
 resource "aws_instance" "example" {
   ami           = "ami-efd0428f"
+	associate_public_ip_address = "true"
   instance_type = "t2.micro"
 	key_name      = "${var.keypair}"
 	subnet_id     = "${aws_subnet.public.id}"
