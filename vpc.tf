@@ -13,9 +13,20 @@ resource "aws_vpc" "main" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public1" {
   vpc_id     = "${aws_vpc.main.id}"
   cidr_block = "10.0.1.0/24"
+	availability_zone = "us-west-2a"
+
+  tags {
+    Name = "public"
+  }
+}
+
+resource "aws_subnet" "public2" {
+  vpc_id     = "${aws_vpc.main.id}"
+  cidr_block = "10.0.2.0/24"
+	availability_zone = "us-west-2b"
 
   tags {
     Name = "public"
@@ -43,8 +54,13 @@ resource "aws_route_table" "direct_to_igw" {
   }
 }
 
-resource "aws_route_table_association" "public_out" {
-  subnet_id      = "${aws_subnet.public.id}"
+resource "aws_route_table_association" "public1_out" {
+  subnet_id      = "${aws_subnet.public1.id}"
+  route_table_id = "${aws_route_table.direct_to_igw.id}"
+}
+
+resource "aws_route_table_association" "public2_out" {
+  subnet_id      = "${aws_subnet.public2.id}"
   route_table_id = "${aws_route_table.direct_to_igw.id}"
 }
 
@@ -73,15 +89,3 @@ resource "aws_security_group" "allow_all" {
   }
 }
 
-resource "aws_eip" "ip" {
-  instance = "${aws_instance.public_with_eip.id}"
-	vpc      = "true"
-}
-
-resource "aws_instance" "public_with_eip" {
-  ami           = "ami-efd0428f"
-  instance_type = "t2.micro"
-	key_name      = "${var.keypair}"
-	subnet_id     = "${aws_subnet.public.id}"
-	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
-}

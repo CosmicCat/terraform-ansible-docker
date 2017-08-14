@@ -1,14 +1,18 @@
-Research and fun building an AWS system using hashicorp tools.
+MORE HERE
 
-Requirements
-* install terraform bin and put it in your path
-* AWS access keys with admin level privs
-* expose AWS envvars to terraform
+## Requirements
+# install terraform bin and put it in your path
+# AWS access keys with admin level privs
+# expose AWS envvars to terraform
 export TF_VAR_access_key=$AWS_ACCESS_KEY_ID
 export TF_VAR_secret_key=$AWS_SECRET_ACCESS_KEY
 export TF_VAR_region=$AWS_DEFAULT_REGION
-* override aws ssh key - unless you have a keypair named 'matthew'
+# override aws ssh key - unless you have a keypair named 'matthew'
 export TF_VAR_keypair=<name-goes-here>
+
+# Make docker-ready ubuntu image
+
 
 Build the system
 * terraform apply
+

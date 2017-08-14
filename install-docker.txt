@@ -1,0 +1,18 @@
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+apt-cache policy docker-ce
+sudo apt-get install -y docker-ce
+
+verify:
+sudo systemctl status docker
+
+
+## swarm
+# manager
+sudo docker swarm init --advertise-addr 35.160.47.93
+# generates a token
+sudo docker swarm join --token SWMTKN-1-0hro51j1kznf055hrg1bez1ut69vhqdnh81wznwt701yipe38a-d9m2iltuylu7mkta5yc8sf50d 35.160.47.93:2377
+# start hello world service
+docker service create --publish 8080:80 --replicas=4 --name hello tutum/hello-world
+
