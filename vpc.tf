@@ -89,3 +89,10 @@ resource "aws_security_group" "allow_all" {
   }
 }
 
+output "packer_sg" {
+  value = "${aws_security_group.allow_all.id}"
+}
+
+output "packer_subnet" {
+  value = "${aws_subnet.public1.id}"
+}
