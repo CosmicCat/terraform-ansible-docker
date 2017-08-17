@@ -24,8 +24,8 @@
             "ssh_username": "ubuntu",
             "ami_name": "docker-ready",
             "associate_public_ip_address": true,
-            "subnet_id": "subnet-67b97f01",
-            "security_group_id": "sg-6a403a10"
+            "subnet_id": "{{user `subnet_id`}}",
+            "security_group_id": "{{user `security_group_id`}}"
         }],
     "provisioners": [{
         "type": "shell",

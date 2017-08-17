@@ -4,7 +4,7 @@ resource "aws_eip" "manager-ip" {
 }
 
 resource "aws_instance" "docker-manager" {
-  ami           = "ami-6003e118"
+  ami           = "${var.docker_ami}"
   instance_type = "t2.micro"
 	key_name      = "${var.keypair}"
 	subnet_id     = "${aws_subnet.public1.id}"
@@ -17,7 +17,7 @@ resource "aws_eip" "worker-ip" {
 }
 
 resource "aws_instance" "docker-worker" {
-  ami           = "ami-6003e118"
+  ami           = "${var.docker_ami}"
   instance_type = "t2.micro"
 	key_name      = "${var.keypair}"
 	subnet_id     = "${aws_subnet.public2.id}"

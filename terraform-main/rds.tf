@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "maria" {
-  name       = "main"
+  name       = "maria"
   subnet_ids = ["${aws_subnet.public1.id}", "${aws_subnet.public2.id}"]
 
   tags {
@@ -19,6 +19,7 @@ resource "aws_db_instance" "maria" {
   db_subnet_group_name = "${aws_db_subnet_group.maria.id}"
 	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
 	publicly_accessible = true
+	skip_final_snapshot = true
 }
 
 output "maria_endpoint" {
