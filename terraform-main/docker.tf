@@ -56,11 +56,11 @@ resource "aws_elb" "docker-elb" {
 }
 
 output "docker_manager_ip" {
-  value = "${aws_instance.docker-manager.public_ip}"
+  value = "${aws_eip.manager-ip.public_ip}"
 }
 
 output "docker_worker_ip" {
-  value = "${aws_instance.docker-worker.public_ip}"
+  value = "${aws_eip.worker-ip.public_ip}"
 }
 
 output "elb_endpoint" {

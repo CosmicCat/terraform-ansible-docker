@@ -15,7 +15,7 @@ resource "aws_db_instance" "maria" {
   instance_class       = "db.t2.micro"
   name                 = "mydb"
   username             = "test"
-  password             = "password"
+  password             = "supersecure"
   db_subnet_group_name = "${aws_db_subnet_group.maria.id}"
 	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
 	publicly_accessible = true

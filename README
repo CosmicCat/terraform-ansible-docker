@@ -28,6 +28,11 @@ export TF_VAR_region=$AWS_DEFAULT_REGION
 # override aws ssh key - unless you have a keypair named 'matthew'
 export TF_VAR_keypair=<name-goes-here>
 
+## ansible configuration
+# keep the y/n question from popping up for unknown host
+export ANSIBLE_HOST_KEY_CHECKING=False
+# path to your private key corresponding to your aws keypair
+export ANSIBLE_PRIVATE_KEY_FILE=xxxxx
 
 ## install packer and put it in your path
 #

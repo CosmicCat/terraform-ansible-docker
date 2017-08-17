@@ -6,4 +6,6 @@ source 'https://rubygems.org' do
   gem "byebug"
   gem "thor"
   gem "aws-sdk"
+  gem "faker"
+  gem "mysql2"
 end
