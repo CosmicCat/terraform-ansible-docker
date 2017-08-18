@@ -28,11 +28,15 @@ class Vars
   end
 
   def self.worker1_ip
-    `terraform output -state=terraform-main/terraform.tfstate docker_worker_ip`.strip
+    `terraform output -state=terraform-main/terraform.tfstate docker_worker_ip1`.strip
   end
 
   def self.worker2_ip
-    "FIXME"
+    `terraform output -state=terraform-main/terraform.tfstate docker_worker_ip2`.strip
+  end
+
+  def self.elb_endpoint
+    `terraform output -state=terraform-main/terraform.tfstate elb_endpoint`.strip
   end
 end
 
@@ -65,6 +69,7 @@ class ManageSwarm
 #{Vars.manager_ip}
 [swarm-workers]
 #{Vars.worker1_ip}
+#{Vars.worker2_ip}
 HERE
   end
 
@@ -93,7 +98,7 @@ HERE
   end
 
   def deploy_app
-    system("ansible swarm-manager -become -i hosts -a 'docker service create --publish 8080:80 --env MARIA=#{Vars.maria_endpoint} --replicas=1 --name hello cosmiccat/php-code-challenge' -u ubuntu")
+    system("ansible swarm-manager -become -i hosts -a 'docker service create --publish 8080:80 --env MARIA=#{Vars.maria_endpoint} --replicas=2 --name hello cosmiccat/php-code-challenge' -u ubuntu")
   end
 end
 
@@ -104,9 +109,10 @@ class BuildCli < Thor
     vpc()
     database()
     swarm()
+    endpoints()
   end
 
-  desc "image", "step 2, build the packer image"
+  desc "image", "build docker-ready ami using packer"
   def image
     if Vars.docker_image_id.nil?
       system "terraform apply -state=terraform-packer/terraform.tfstate terraform-packer"
@@ -117,7 +123,7 @@ class BuildCli < Thor
     end
   end
 
-  desc "vpc", "step 3, build out full vpc"
+  desc "vpc", "build out full infrastructure using terraform"
   def vpc
     system "terraform apply -state=terraform-main/terraform.tfstate -var 'docker_ami=#{Vars.docker_image_id}' terraform-main"
   end
@@ -133,9 +139,18 @@ class BuildCli < Thor
     Maria.new.populate
   end
 
-  desc "swarm", "initialize the docker swarm"
+  desc "swarm", "initialize the docker swarm using ansible"
   def swarm
     ManageSwarm.new.init_swarm
+  end
+
+  desc "endpoints", "display the endpoints after everything is built"
+  def endpoints
+    puts "manager: #{Vars.manager_ip}"
+    puts "worker1: #{Vars.worker1_ip}"
+    puts "worker2: #{Vars.worker2_ip}"
+    puts "maria: #{Vars.maria_endpoint}"
+    puts "elb: #{Vars.elb_endpoint}"
   end
 
 end

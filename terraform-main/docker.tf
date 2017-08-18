@@ -11,12 +11,25 @@ resource "aws_instance" "docker-manager" {
 	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
 }
 
-resource "aws_eip" "worker-ip" {
-  instance = "${aws_instance.docker-worker.id}"
+resource "aws_eip" "worker-ip1" {
+  instance = "${aws_instance.docker-worker1.id}"
 	vpc      = "true"
 }
 
-resource "aws_instance" "docker-worker" {
+resource "aws_instance" "docker-worker1" {
+  ami           = "${var.docker_ami}"
+  instance_type = "t2.micro"
+	key_name      = "${var.keypair}"
+	subnet_id     = "${aws_subnet.public2.id}"
+	vpc_security_group_ids = ["${aws_security_group.allow_all.id}"]
+}
+
+resource "aws_eip" "worker-ip2" {
+  instance = "${aws_instance.docker-worker2.id}"
+	vpc      = "true"
+}
+
+resource "aws_instance" "docker-worker2" {
   ami           = "${var.docker_ami}"
   instance_type = "t2.micro"
 	key_name      = "${var.keypair}"
@@ -44,7 +57,7 @@ resource "aws_elb" "docker-elb" {
     interval            = 30
   }
 
-  instances                   = ["${aws_instance.docker-manager.id}", "${aws_instance.docker-worker.id}"]
+  instances                   = ["${aws_instance.docker-manager.id}", "${aws_instance.docker-worker1.id}", "${aws_instance.docker-worker2.id}"]
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
@@ -59,8 +72,12 @@ output "docker_manager_ip" {
   value = "${aws_eip.manager-ip.public_ip}"
 }
 
-output "docker_worker_ip" {
-  value = "${aws_eip.worker-ip.public_ip}"
+output "docker_worker_ip1" {
+  value = "${aws_eip.worker-ip1.public_ip}"
+}
+
+output "docker_worker_ip2" {
+  value = "${aws_eip.worker-ip2.public_ip}"
 }
 
 output "elb_endpoint" {
