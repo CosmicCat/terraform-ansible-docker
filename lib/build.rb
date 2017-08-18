@@ -93,7 +93,7 @@ HERE
   end
 
   def deploy_app
-    system("ansible swarm-manager -become -i hosts -a 'docker service create --publish 8080:80 --replicas=4 --name hello tutum/hello-world' -u ubuntu")
+    system("ansible swarm-manager -become -i hosts -a 'docker service create --publish 8080:80 --env MARIA=#{Vars.maria_endpoint} --replicas=1 --name hello cosmiccat/php-code-challenge' -u ubuntu")
   end
 end
 
